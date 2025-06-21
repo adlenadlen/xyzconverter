@@ -365,7 +365,7 @@ class ConverterApp(TkinterDnD.Tk):
         # Ссылка на GitHub
         self.github_link = tk.Label(
             self.footer_frame,
-            text="версия 1.0.2",
+            text="версия 1.0.3",
             fg="blue",
             cursor="hand2",
             font=("Arial", 10, "underline")
