@@ -32,9 +32,9 @@ jobs:
           pip install -r requirements.txt
 
       # 4. Собираем .exe файл с помощью Nuitka
-      # ИЗМЕНЕНИЯ ЗДЕСЬ: Обновлены все флаги по рекомендациям Nuitka
+      # ИЗМЕНЕНИЕ: Используем правильный флаг --assume-yes-for-downloads
       - name: Build executable with Nuitka
-        run: python -m nuitka --onefile --windows-console-mode=disable --enable-plugin=tk-inter --include-package-data=tkinterdnd2 --accept-all-yes --output-filename="Adlens_xyzconverter" --output-dir=dist xyzconverter.py
+        run: python -m nuitka --onefile --windows-console-mode=disable --enable-plugin=tk-inter --include-package-data=tkinterdnd2 --assume-yes-for-downloads --output-filename="Adlens_xyzconverter" --output-dir=dist xyzconverter.py
 
       # 5. Создаем ZIP-архив с программой
       - name: Create ZIP from executable
