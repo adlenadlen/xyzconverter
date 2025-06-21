@@ -32,14 +32,13 @@ jobs:
           pip install -r requirements.txt
 
       # 4. Устанавливаем UPX для максимального сжатия
-      # Chocolatey уже предустановлен на Windows-раннерах GitHub
       - name: Install UPX for compression
         run: choco install upx --yes
 
       # 5. Собираем и сжимаем .exe файл с помощью Nuitka
-      # Nuitka автоматически обнаружит и использует UPX, если он доступен
+      # ИЗМЕНЕНИЕ: Используем правильный флаг --module-disallow-list
       - name: Build and compress executable with Nuitka
-        run: python -m nuitka --onefile --windows-console-mode=disable --enable-plugin=tk-inter --include-package-data=tkinterdnd2 --assume-yes-for-downloads --lto=yes --remove-output --noinclude-module=unittest --noinclude-module=doctest --noinclude-module=asyncio --noinclude-module=sqlite3 --output-filename="xyzconverter" --output-dir=dist xyzconverter.py
+        run: python -m nuitka --onefile --windows-console-mode=disable --enable-plugin=tk-inter --include-package-data=tkinterdnd2 --assume-yes-for-downloads --lto=yes --remove-output --module-disallow-list=unittest --module-disallow-list=doctest --module-disallow-list=asyncio --module-disallow-list=sqlite3 --output-filename="xyzconverter" --output-dir=dist xyzconverter.py
 
       # 6. Создаем ZIP-архив с программой
       - name: Create ZIP from executable
