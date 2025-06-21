@@ -1,5 +1,5 @@
 # Название рабочего процесса
-name: Create Release Assets with Nuitka
+name: Create Release Assets with Nuitka and UPX
 
 # Триггер: запускать только при публикации нового релиза
 on:
@@ -31,18 +31,20 @@ jobs:
           pip install nuitka
           pip install -r requirements.txt
 
-      # 4. Собираем .exe файл с помощью Nuitka
-      # ИЗМЕНЕНИЕ 1: Упрощено имя выходного .exe файла
-      - name: Build executable with Nuitka
-        run: python -m nuitka --onefile --windows-console-mode=disable --enable-plugin=tk-inter --include-package-data=tkinterdnd2 --assume-yes-for-downloads --output-filename="xyzconverter" --output-dir=dist xyzconverter.py
+      # 4. Устанавливаем UPX для максимального сжатия
+      - name: Install UPX for compression
+        run: choco install upx --yes
 
-      # 5. Создаем ZIP-архив с программой
-      # ИЗМЕНЕНИЕ 2: Используем новые имена для .exe и .zip
+      # 5. Собираем и сжимаем .exe файл с помощью Nuitka
+      # ИЗМЕНЕНИЕ: Используем плагин anti-bloat вместо ручного исключения модулей
+      - name: Build and compress executable with Nuitka
+        run: python -m nuitka --onefile --windows-console-mode=disable --enable-plugin=tk-inter --enable-plugin=anti-bloat --include-package-data=tkinterdnd2 --assume-yes-for-downloads --lto=yes --remove-output --output-filename="xyzconverter" --output-dir=dist xyzconverter.py
+
+      # 6. Создаем ZIP-архив с программой
       - name: Create ZIP from executable
         run: Compress-Archive -Path dist/xyzconverter.exe -DestinationPath "xyzconverter.zip"
 
-      # 6. Загружаем наш ZIP-файл как ассет к релизу
-      # ИЗМЕНЕНИЕ 3: Указываем новое имя .zip файла для загрузки
+      # 7. Загружаем наш ZIP-файл как ассет к релизу
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         with:
