@@ -23,7 +23,7 @@ jobs:
         with:
           python-version: '3.9'
 
-      # 3. Устанавливаем зависимости из requirements.txt
+      # 3. Устанавливаем зависимости
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -38,22 +38,13 @@ jobs:
         run: pyinstaller --onefile --windowed --name "Adlens_xyzconverter" xyzconverter.py
 
       # 6. Создаем ZIP-архив с программой
-      # Используем встроенную в PowerShell команду Compress-Archive
       - name: Create ZIP from executable
         run: Compress-Archive -Path dist/Adlens_xyzconverter.exe -DestinationPath "Adlen's xyzconverter.zip"
 
-      # 7. Создаем ZIP-архив с исходным кодом
-      # Используем * для включения всех файлов и папок, включая .github
-      - name: Create ZIP from source code
-        run: Compress-Archive -Path * -DestinationPath "source-code.zip"
-
-      # 8. Загружаем оба ZIP-файла как ассеты к релизу
-      # Используем популярный action, который делает это автоматически
-      - name: Upload Release Assets
+      # 7. Загружаем НАШ ZIP-файл как ассет к релизу
+      # Шаг с созданием source-code.zip убран
+      - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         with:
-          # Файлы, которые нужно прикрепить к релизу.
-          # Каждый файл с новой строки.
-          files: |
-            Adlen's xyzconverter.zip
-            source-code.zip
+          # Теперь здесь только один файл
+          files: "Adlen's xyzconverter.zip"
