@@ -9,11 +9,7 @@ on:
 # Задачи
 jobs:
   build-and-upload:
-    # Запускаемся на Windows для сборки .exe
     runs-on: windows-latest
-
-    # ЯВНО ПРЕДОСТАВЛЯЕМ ПРАВА НА ЗАПИСЬ
-    # Этот блок должен быть прямо здесь, на одном уровне с 'runs-on' и 'steps'
     permissions:
       contents: write
 
@@ -43,11 +39,13 @@ jobs:
         run: pyinstaller --onefile --windowed --name "Adlens_xyzconverter" xyzconverter.py
 
       # 6. Создаем ZIP-архив с программой
+      # ИЗМЕНЕНИЕ 1: Используем безопасное имя файла без апострофа
       - name: Create ZIP from executable
-        run: Compress-Archive -Path dist/Adlens_xyzconverter.exe -DestinationPath "Adlen's xyzconverter.zip"
+        run: Compress-Archive -Path dist/Adlens_xyzconverter.exe -DestinationPath "Adlens-xyzconverter.zip"
 
       # 7. Загружаем наш ZIP-файл как ассет к релизу
+      # ИЗМЕНЕНИЕ 2: Указываем правильное, безопасное имя файла
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         with:
-          files: "Adlen's xyzconverter.zip"
+          files: "Adlens-xyzconverter.zip"
