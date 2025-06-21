@@ -1,0 +1,47 @@
+# Название рабочего процесса, которое будет отображаться в GitHub
+name: Build Python Executable
+
+# Триггер: запускать этот процесс при каждом push в ветку main
+on:
+  push:
+    branches: [ "main" ] # Или "master", в зависимости от названия вашей основной ветки
+
+# Задачи, которые нужно выполнить
+jobs:
+  # Название задачи (может быть любым)
+  build-windows-exe:
+    # Указываем, что задача должна выполняться на виртуальной машине с Windows
+    runs-on: windows-latest
+
+    # Шаги, которые будут выполняться последовательно
+    steps:
+      # 1. Клонируем репозиторий, чтобы получить доступ к коду
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Устанавливаем Python нужной версии
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9' # Вы можете выбрать другую версию, если нужно
+
+      # 3. Устанавливаем зависимости из requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4. Устанавливаем PyInstaller
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+
+      # 5. Собираем .exe файл с помощью PyInstaller
+      - name: Build executable with PyInstaller
+        run: pyinstaller --onefile --windowed --name "Adlens_xyzconverter" xyzconverter.py
+
+      # 6. Загружаем собранный .exe как "артефакт"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Windows-Executable
+          path: dist/Adlens_xyzconverter.exe
