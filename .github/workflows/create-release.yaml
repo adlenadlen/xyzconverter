@@ -1,5 +1,5 @@
 # Название рабочего процесса
-name: Create Release Assets
+name: Create Release Assets with Nuitka
 
 # Триггер: запускать только при публикации нового релиза
 on:
@@ -24,27 +24,30 @@ jobs:
         with:
           python-version: '3.9'
 
-      # 3. Устанавливаем зависимости
+      # 3. Устанавливаем зависимости (включая Nuitka)
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install nuitka
           pip install -r requirements.txt
 
-      # 4. Устанавливаем PyInstaller
-      - name: Install PyInstaller
-        run: pip install pyinstaller
+      # 4. Собираем .exe файл с помощью Nuitka
+      # Обратите внимание на новые флаги
+      - name: Build executable with Nuitka
+        run: |
+          python -m nuitka `
+            --onefile `
+            --windows-disable-console `
+            --enable-plugin=tkinter `
+            --output-filename="Adlens_xyzconverter" `
+            --output-dir=dist `
+            xyzconverter.py
 
-      # 5. Собираем .exe файл
-      - name: Build executable with PyInstaller
-        run: pyinstaller --onefile --windowed --name "Adlens_xyzconverter" xyzconverter.py
-
-      # 6. Создаем ZIP-архив с программой
-      # ИЗМЕНЕНИЕ 1: Используем безопасное имя файла без апострофа
+      # 5. Создаем ZIP-архив с программой
       - name: Create ZIP from executable
         run: Compress-Archive -Path dist/Adlens_xyzconverter.exe -DestinationPath "Adlens-xyzconverter.zip"
 
-      # 7. Загружаем наш ZIP-файл как ассет к релизу
-      # ИЗМЕНЕНИЕ 2: Указываем правильное, безопасное имя файла
+      # 6. Загружаем наш ZIP-файл как ассет к релизу
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         with:
