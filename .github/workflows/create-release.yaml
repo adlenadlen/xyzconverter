@@ -32,16 +32,18 @@ jobs:
           pip install -r requirements.txt
 
       # 4. Собираем .exe файл с помощью Nuitka
-      # ИЗМЕНЕНИЕ: Используем правильный флаг --assume-yes-for-downloads
+      # ИЗМЕНЕНИЕ 1: Упрощено имя выходного .exe файла
       - name: Build executable with Nuitka
-        run: python -m nuitka --onefile --windows-console-mode=disable --enable-plugin=tk-inter --include-package-data=tkinterdnd2 --assume-yes-for-downloads --output-filename="Adlens_xyzconverter" --output-dir=dist xyzconverter.py
+        run: python -m nuitka --onefile --windows-console-mode=disable --enable-plugin=tk-inter --include-package-data=tkinterdnd2 --assume-yes-for-downloads --output-filename="xyzconverter" --output-dir=dist xyzconverter.py
 
       # 5. Создаем ZIP-архив с программой
+      # ИЗМЕНЕНИЕ 2: Используем новые имена для .exe и .zip
       - name: Create ZIP from executable
-        run: Compress-Archive -Path dist/Adlens_xyzconverter.exe -DestinationPath "Adlens-xyzconverter.zip"
+        run: Compress-Archive -Path dist/xyzconverter.exe -DestinationPath "xyzconverter.zip"
 
       # 6. Загружаем наш ZIP-файл как ассет к релизу
+      # ИЗМЕНЕНИЕ 3: Указываем новое имя .zip файла для загрузки
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         with:
-          files: "Adlens-xyzconverter.zip"
+          files: "xyzconverter.zip"
