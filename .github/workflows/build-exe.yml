@@ -8,22 +8,21 @@ on:
 
 # Задачи, которые нужно выполнить
 jobs:
-  # Название задачи (может быть любым)
   build-windows-exe:
     # Указываем, что задача должна выполняться на виртуальной машине с Windows
     runs-on: windows-latest
 
     # Шаги, которые будут выполняться последовательно
     steps:
-      # 1. Клонируем репозиторий, чтобы получить доступ к коду
+      # 1. Клонируем репозиторий (обновлено до v4)
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # 2. Устанавливаем Python нужной версии
+      # 2. Устанавливаем Python (обновлено до v5)
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.9' # Вы можете выбрать другую версию, если нужно
+          python-version: '3.9'
 
       # 3. Устанавливаем зависимости из requirements.txt
       - name: Install dependencies
@@ -39,9 +38,9 @@ jobs:
       - name: Build executable with PyInstaller
         run: pyinstaller --onefile --windowed --name "Adlens_xyzconverter" xyzconverter.py
 
-      # 6. Загружаем собранный .exe как "артефакт"
+      # 6. Загружаем собранный .exe как "артефакт" (ОБНОВЛЕНО до v4 - исправляет ошибку)
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Windows-Executable
           path: dist/Adlens_xyzconverter.exe
