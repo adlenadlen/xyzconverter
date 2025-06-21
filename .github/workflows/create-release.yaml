@@ -36,9 +36,9 @@ jobs:
         run: choco install upx --yes
 
       # 5. Собираем и сжимаем .exe файл с помощью Nuitka
-      # ИЗМЕНЕНИЕ: Используем правильный флаг --module-disallow-list
+      # ИЗМЕНЕНИЕ: Используем плагин anti-bloat вместо ручного исключения модулей
       - name: Build and compress executable with Nuitka
-        run: python -m nuitka --onefile --windows-console-mode=disable --enable-plugin=tk-inter --include-package-data=tkinterdnd2 --assume-yes-for-downloads --lto=yes --remove-output --module-disallow-list=unittest --module-disallow-list=doctest --module-disallow-list=asyncio --module-disallow-list=sqlite3 --output-filename="xyzconverter" --output-dir=dist xyzconverter.py
+        run: python -m nuitka --onefile --windows-console-mode=disable --enable-plugin=tk-inter --enable-plugin=anti-bloat --include-package-data=tkinterdnd2 --assume-yes-for-downloads --lto=yes --remove-output --output-filename="xyzconverter" --output-dir=dist xyzconverter.py
 
       # 6. Создаем ZIP-архив с программой
       - name: Create ZIP from executable
