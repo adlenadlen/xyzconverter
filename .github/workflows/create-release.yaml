@@ -24,7 +24,7 @@ jobs:
         with:
           python-version: '3.9'
 
-      # 3. Устанавливаем зависимости (включая Nuitka)
+      # 3. Устанавливаем зависимости
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -32,16 +32,17 @@ jobs:
           pip install -r requirements.txt
 
       # 4. Собираем .exe файл с помощью Nuitka
-      # Обратите внимание на новые флаги
+      # ИЗМЕНЕНИЯ ЗДЕСЬ:
       - name: Build executable with Nuitka
         run: |
           python -m nuitka `
             --onefile `
             --windows-disable-console `
-            --enable-plugin=tkinter `
+            --include-package-data=tkinterdnd2 `   # ДОБАВЛЕНО: Включаем файлы данных для DnD
             --output-filename="Adlens_xyzconverter" `
             --output-dir=dist `
             xyzconverter.py
+            # Флаг --enable-plugin=tkinter УДАЛЕН
 
       # 5. Создаем ZIP-архив с программой
       - name: Create ZIP from executable
