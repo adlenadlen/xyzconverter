@@ -398,7 +398,7 @@ class ConverterApp(TkinterDnD.Tk):
         ]
 
         filepath = filedialog.askopenfilename(
-            title="Выберите файл для конвертации",
+            title="Ожидание след. файла",
             filetypes=filetypes
         )
 
@@ -783,12 +783,12 @@ class ConverterApp(TkinterDnD.Tk):
         # Восстановление заглушек
         ttk.Label(
             self.input_frame,
-            text="Выберите файл для настройки параметров"
+            text="Ожидание файла"
         ).pack()
 
         ttk.Label(
             self.output_frame,
-            text="Выберите файл для настройки параметров"
+            text="Ожидание файла"
         ).pack()
 
 
