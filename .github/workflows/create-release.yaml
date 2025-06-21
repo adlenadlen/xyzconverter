@@ -12,6 +12,13 @@ jobs:
     # Запускаемся на Windows для сборки .exe
     runs-on: windows-latest
 
+    # -----------------------------------------------------------------
+    # ИЗМЕНЕНИЕ ЗДЕСЬ: Явно предоставляем права на запись
+    # -----------------------------------------------------------------
+    permissions:
+      contents: write
+    # -----------------------------------------------------------------
+
     steps:
       # 1. Клонируем код репозитория
       - name: Checkout repository
@@ -41,10 +48,8 @@ jobs:
       - name: Create ZIP from executable
         run: Compress-Archive -Path dist/Adlens_xyzconverter.exe -DestinationPath "Adlen's xyzconverter.zip"
 
-      # 7. Загружаем НАШ ZIP-файл как ассет к релизу
-      # Шаг с созданием source-code.zip убран
+      # 7. Загружаем наш ZIP-файл как ассет к релизу
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         with:
-          # Теперь здесь только один файл
           files: "Adlen's xyzconverter.zip"
